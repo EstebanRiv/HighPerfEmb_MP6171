@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/time.h>
 
 void printHelp (void);
 void printAuthorInfo (void);
@@ -11,17 +12,36 @@ void rgb2yuv (char *input_image, char *output_image);
 char *cvalue = NULL;
 char *rgbFile = NULL;
 char *yuvFile = NULL;
+struct timeval start, end;
+double t;
+
 
 /* */
 int main (int argc, char **argv)
 {
+    gettimeofday(&start, NULL);
+    
     // parse argumetns
-    argumentParser(argc, argv);
+    //argumentParser(argc, argv);
 
-    if ((rgbFile != NULL) && (yuvFile != NULL))
+    //if ((rgbFile != NULL) && (yuvFile != NULL))
+    //{
+    //   rgb2yuv(rgbFile, yuvFile);
+    //}
+
+    int a = 0;
+
+    for(int i=0; i<100000;i++)
     {
-       rgb2yuv(rgbFile, yuvFile);
+        a+=i;
+
     }
+
+    gettimeofday(&end, NULL);
+
+    t = (double) ((end.tv_sec * 1000000 + end.tv_usec) - (start.tv_sec * 1000000 + start.tv_usec)) / 1000000.0;
+
+    printf("time: %f\n",t);
 }
 
 /* */
