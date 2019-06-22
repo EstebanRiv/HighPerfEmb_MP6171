@@ -93,6 +93,43 @@ void printAuthorInfo()
 /* */
 void rgb2yuv(char *input_image, char *output_image)
 {
-    printf("%s\n", input_image);
-    printf("%s\n", output_image);
+    FILE *ptr;
+    FILE *write_ptr;
+
+    printf("In file: %s\n", input_image);
+    printf("Out file: %s\n", output_image);
+
+    int heigth = 640;
+    int width = 480;
+
+    int n_bytes = heigth * width * 3;
+
+    unsigned char buffer_in[n_bytes];
+    unsigned char buffer_out[n_bytes];
+
+    // read input RGB file
+    ptr = fopen(input_image,"rb");
+    fread(buffer_in,n_bytes,1,ptr);
+
+    if (!ptr)
+    {
+        // Input format: RGB24 -->|B G R|B G R|B G R|....|B G R|B G R|B G R|<-- high memory
+        
+        /* Este es la formula/algoritmo que sale en todo lado, No Funciona!
+           Nuevo approach (basado en https://github.com/descampsa/yuv2rgb/blob/master/yuv_rgb.c) en progreso
+        // i=B, i+1=G, i+2=R
+        for(int i = 0; i<n_bytes-3; 3*i++)
+        {            
+            buffer_out[i]   = (( buffer_in[i+2]*66  + buffer_in[i+1]* 129 + buffer_in[i]*25  + 128) >> 8) + 16;            // Y =  R*0.299000 + G*0.587000 + B*0.114000
+            buffer_out[i+1] = ((-buffer_in[i+2]*38  - buffer_in[i+1]* 74 + buffer_in[i]*112  + 128) >> 8) + 128;           // U = -R*0.168736 - G*0.331264 + B*0.500000 + 128
+            buffer_out[i+2] = (( buffer_in[i+2]*112 - buffer_in[i+1]* 94 - buffer_in[i]*18   + 128) >> 8) + 128;           // V =  R*0.500000 - G*0.418688 - B*0.081312 + 128
+        } */
+    }
+
+    write_ptr = fopen(output_image,"wb");
+    fwrite(buffer_out,n_bytes,1,write_ptr);    
+
+    fclose(ptr);
+    fclose(write_ptr);
 }
+
