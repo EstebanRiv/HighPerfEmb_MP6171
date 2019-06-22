@@ -103,12 +103,6 @@ void rgb2yuv(char *input_image, char *output_image)
             buffer_out[i+(n_bytes/3)] = ((-buffer_in[i+2]*38  - buffer_in[i+1]* 74 + buffer_in[i]*112  + 128) >> 8) + 128;             // U = -R*0.168736 - G*0.331264 + B*0.500000 + 128
             buffer_out[i+(2*n_bytes/3)] = (( buffer_in[i+2]*112 - buffer_in[i+1]* 94 - buffer_in[i]*18   + 128) >> 8) + 128;           // V =  R*0.500000 - G*0.418688 - B*0.081312 + 128
         }
-
-        for(int i = 0; i<n_bytes; i++)
-        {            
-            printf("%i\n", buffer_out[i]);
-            printf("\n");
-        }
          
     }
 
