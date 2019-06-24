@@ -1,0 +1,122 @@
+rgb2yuv_intrinsics.c: In function 'rgb2yuv':
+rgb2yuv_intrinsics.c:106:44: error: incompatible type for argument 1 of 'vaddq_u32'
+           uint32x4_t twoahead =  vaddq_u32(i,2);
+                                            ^
+In file included from rgb2yuv_intrinsics.c:5:
+/usr/lib/gcc/arm-poky-linux-gnueabi/8.3.0/include/arm_neon.h:635:23: note: expected 'uint32x4_t' but argument is of type 'uint32_t' {aka 'unsigned int'}
+ vaddq_u32 (uint32x4_t __a, uint32x4_t __b)
+            ~~~~~~~~~~~^~~
+rgb2yuv_intrinsics.c:106:46: error: incompatible type for argument 2 of 'vaddq_u32'
+           uint32x4_t twoahead =  vaddq_u32(i,2);
+                                              ^
+In file included from rgb2yuv_intrinsics.c:5:
+/usr/lib/gcc/arm-poky-linux-gnueabi/8.3.0/include/arm_neon.h:635:39: note: expected 'uint32x4_t' but argument is of type 'int'
+ vaddq_u32 (uint32x4_t __a, uint32x4_t __b)
+                            ~~~~~~~~~~~^~~
+rgb2yuv_intrinsics.c:107:44: error: incompatible type for argument 1 of 'vaddq_u32'
+           uint32x4_t oneahead =  vaddq_u32(i,1);
+                                            ^
+In file included from rgb2yuv_intrinsics.c:5:
+/usr/lib/gcc/arm-poky-linux-gnueabi/8.3.0/include/arm_neon.h:635:23: note: expected 'uint32x4_t' but argument is of type 'uint32_t' {aka 'unsigned int'}
+ vaddq_u32 (uint32x4_t __a, uint32x4_t __b)
+            ~~~~~~~~~~~^~~
+rgb2yuv_intrinsics.c:107:46: error: incompatible type for argument 2 of 'vaddq_u32'
+           uint32x4_t oneahead =  vaddq_u32(i,1);
+                                              ^
+In file included from rgb2yuv_intrinsics.c:5:
+/usr/lib/gcc/arm-poky-linux-gnueabi/8.3.0/include/arm_neon.h:635:39: note: expected 'uint32x4_t' but argument is of type 'int'
+ vaddq_u32 (uint32x4_t __a, uint32x4_t __b)
+                            ~~~~~~~~~~~^~~
+rgb2yuv_intrinsics.c:108:59: error: array subscript is not an integer
+           int64x2_t sixtysixTimes_2 = vmull_s32 (buffer_in[twoahead], 66);
+                                                           ^
+rgb2yuv_intrinsics.c:108:71: error: incompatible type for argument 2 of 'vmull_s32'
+           int64x2_t sixtysixTimes_2 = vmull_s32 (buffer_in[twoahead], 66);
+                                                                       ^~
+In file included from rgb2yuv_intrinsics.c:5:
+/usr/lib/gcc/arm-poky-linux-gnueabi/8.3.0/include/arm_neon.h:1346:37: note: expected 'int32x2_t' but argument is of type 'int'
+ vmull_s32 (int32x2_t __a, int32x2_t __b)
+                           ~~~~~~~~~~^~~
+rgb2yuv_intrinsics.c:109:60: error: array subscript is not an integer
+           int64x2_t onetwonineTimes_1 = vmull_s32(buffer_in[oneahead], 129);
+                                                            ^
+rgb2yuv_intrinsics.c:109:72: error: incompatible type for argument 2 of 'vmull_s32'
+           int64x2_t onetwonineTimes_1 = vmull_s32(buffer_in[oneahead], 129);
+                                                                        ^~~
+In file included from rgb2yuv_intrinsics.c:5:
+/usr/lib/gcc/arm-poky-linux-gnueabi/8.3.0/include/arm_neon.h:1346:37: note: expected 'int32x2_t' but argument is of type 'int'
+ vmull_s32 (int32x2_t __a, int32x2_t __b)
+                           ~~~~~~~~~~^~~
+rgb2yuv_intrinsics.c:110:58: error: incompatible type for argument 1 of 'vmull_s32'
+           int64x2_t twentyfiveTimes = vmull_s32(buffer_in[i],25);
+                                                 ~~~~~~~~~^~~
+In file included from rgb2yuv_intrinsics.c:5:
+/usr/lib/gcc/arm-poky-linux-gnueabi/8.3.0/include/arm_neon.h:1346:22: note: expected 'int32x2_t' but argument is of type 'unsigned char'
+ vmull_s32 (int32x2_t __a, int32x2_t __b)
+            ~~~~~~~~~~^~~
+rgb2yuv_intrinsics.c:110:62: error: incompatible type for argument 2 of 'vmull_s32'
+           int64x2_t twentyfiveTimes = vmull_s32(buffer_in[i],25);
+                                                              ^~
+In file included from rgb2yuv_intrinsics.c:5:
+/usr/lib/gcc/arm-poky-linux-gnueabi/8.3.0/include/arm_neon.h:1346:37: note: expected 'int32x2_t' but argument is of type 'int'
+ vmull_s32 (int32x2_t __a, int32x2_t __b)
+                           ~~~~~~~~~~^~~
+rgb2yuv_intrinsics.c:111:11: note: use -flax-vector-conversions to permit conversions between vectors with differing element types or numbers of subparts
+           uint32x2_t firstinternalSum =  vaddq_u32(vaddq_u32(sixtysixTimes_2  + onetwonineTimes_1) + vaddq_u32(twentyfiveTimes, 128));
+           ^~~~~~~~~~
+rgb2yuv_intrinsics.c:111:79: error: incompatible type for argument 1 of 'vaddq_u32'
+           uint32x2_t firstinternalSum =  vaddq_u32(vaddq_u32(sixtysixTimes_2  + onetwonineTimes_1) + vaddq_u32(twentyfiveTimes, 128));
+                                                              ~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+In file included from rgb2yuv_intrinsics.c:5:
+/usr/lib/gcc/arm-poky-linux-gnueabi/8.3.0/include/arm_neon.h:635:23: note: expected 'uint32x4_t' but argument is of type 'int64x2_t'
+ vaddq_u32 (uint32x4_t __a, uint32x4_t __b)
+            ~~~~~~~~~~~^~~
+rgb2yuv_intrinsics.c:111:52: error: too few arguments to function 'vaddq_u32'
+           uint32x2_t firstinternalSum =  vaddq_u32(vaddq_u32(sixtysixTimes_2  + onetwonineTimes_1) + vaddq_u32(twentyfiveTimes, 128));
+                                                    ^~~~~~~~~
+In file included from rgb2yuv_intrinsics.c:5:
+/usr/lib/gcc/arm-poky-linux-gnueabi/8.3.0/include/arm_neon.h:635:1: note: declared here
+ vaddq_u32 (uint32x4_t __a, uint32x4_t __b)
+ ^~~~~~~~~
+rgb2yuv_intrinsics.c:111:112: error: incompatible type for argument 1 of 'vaddq_u32'
+           uint32x2_t firstinternalSum =  vaddq_u32(vaddq_u32(sixtysixTimes_2  + onetwonineTimes_1) + vaddq_u32(twentyfiveTimes, 128));
+                                                                                                                ^~~~~~~~~~~~~~~
+In file included from rgb2yuv_intrinsics.c:5:
+/usr/lib/gcc/arm-poky-linux-gnueabi/8.3.0/include/arm_neon.h:635:23: note: expected 'uint32x4_t' but argument is of type 'int64x2_t'
+ vaddq_u32 (uint32x4_t __a, uint32x4_t __b)
+            ~~~~~~~~~~~^~~
+rgb2yuv_intrinsics.c:111:129: error: incompatible type for argument 2 of 'vaddq_u32'
+           uint32x2_t firstinternalSum =  vaddq_u32(vaddq_u32(sixtysixTimes_2  + onetwonineTimes_1) + vaddq_u32(twentyfiveTimes, 128));
+                                                                                                                                 ^~~
+In file included from rgb2yuv_intrinsics.c:5:
+/usr/lib/gcc/arm-poky-linux-gnueabi/8.3.0/include/arm_neon.h:635:39: note: expected 'uint32x4_t' but argument is of type 'int'
+ vaddq_u32 (uint32x4_t __a, uint32x4_t __b)
+                            ~~~~~~~~~~~^~~
+rgb2yuv_intrinsics.c:111:42: error: too few arguments to function 'vaddq_u32'
+           uint32x2_t firstinternalSum =  vaddq_u32(vaddq_u32(sixtysixTimes_2  + onetwonineTimes_1) + vaddq_u32(twentyfiveTimes, 128));
+                                          ^~~~~~~~~
+In file included from rgb2yuv_intrinsics.c:5:
+/usr/lib/gcc/arm-poky-linux-gnueabi/8.3.0/include/arm_neon.h:635:1: note: declared here
+ vaddq_u32 (uint32x4_t __a, uint32x4_t __b)
+ ^~~~~~~~~
+rgb2yuv_intrinsics.c:112:47: error: incompatible type for argument 1 of 'vshl_n_s32'
+           int32x2_t shiftleft_1 = vshl_n_s32 (firstinternalSum, 8);
+                                               ^~~~~~~~~~~~~~~~
+In file included from rgb2yuv_intrinsics.c:5:
+/usr/lib/gcc/arm-poky-linux-gnueabi/8.3.0/include/arm_neon.h:4749:23: note: expected 'int32x2_t' but argument is of type 'uint32x2_t'
+ vshl_n_s32 (int32x2_t __a, const int __b)
+             ~~~~~~~~~~^~~
+rgb2yuv_intrinsics.c:114:39: error: incompatible type for argument 1 of 'vaddq_u32'
+           buffer_out[i]   = vaddq_u32(shiftleft_1, 16);                        // Y =  R*0.299000 + G*0.587000 + B*0.114000
+                                       ^~~~~~~~~~~
+In file included from rgb2yuv_intrinsics.c:5:
+/usr/lib/gcc/arm-poky-linux-gnueabi/8.3.0/include/arm_neon.h:635:23: note: expected 'uint32x4_t' but argument is of type 'int32x2_t'
+ vaddq_u32 (uint32x4_t __a, uint32x4_t __b)
+            ~~~~~~~~~~~^~~
+rgb2yuv_intrinsics.c:114:52: error: incompatible type for argument 2 of 'vaddq_u32'
+           buffer_out[i]   = vaddq_u32(shiftleft_1, 16);                        // Y =  R*0.299000 + G*0.587000 + B*0.114000
+                                                    ^~
+In file included from rgb2yuv_intrinsics.c:5:
+/usr/lib/gcc/arm-poky-linux-gnueabi/8.3.0/include/arm_neon.h:635:39: note: expected 'uint32x4_t' but argument is of type 'int'
+ vaddq_u32 (uint32x4_t __a, uint32x4_t __b)
+                            ~~~~~~~~~~~^~~
