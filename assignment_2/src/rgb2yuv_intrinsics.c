@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <sys/time.h>
+#include <arm_neon.h>
 
 void printHelp (void);
 void printAuthorInfo (void);
@@ -13,15 +13,9 @@ char *cvalue = NULL;
 char *rgbFile = NULL;
 char *yuvFile = NULL;
 
-struct timeval start, end;
-double t;
-
 /* */
 int main (int argc, char **argv)
 {
-    // get start time to init "profiler"
-    gettimeofday(&start, NULL);
-
     // parse argumetns
     argumentParser(argc, argv);
 
@@ -29,12 +23,6 @@ int main (int argc, char **argv)
     {
        rgb2yuv(rgbFile, yuvFile);
     }
-
-    // get end time
-    gettimeofday(&end, NULL);
-    t = (double) ((end.tv_sec * 1000000 + end.tv_usec) - (start.tv_sec * 1000000 + start.tv_usec)) / 1000000.0;
-
-    printf("time: %f\n",t);
 }
 
 /* */
@@ -109,20 +97,51 @@ void rgb2yuv(char *input_image, char *output_image)
         // Input format: RGB24, low memory-->|B G R|B G R|B G R|....|B G R|B G R|B G R|<--high memory
         // Output format: YUV444 packed, low memory->|Y Y Y Y Y..|U U U U U...|V V V V V|<--high memory
            
-        printf("r: %i, g: %i, b: %i\n", buffer_in[5],buffer_in[4],buffer_in[3]) ;  
-
         // i=B, i+1=G, i+2=R
-        for(int i = 0; i<n_bytes; 3*i++)
+        for(int i = 0; i<n_bytes-3; 3*i++)
         {
-                       
-            buffer_out[i]               =  buffer_in[i]*0.299   + buffer_in[i+1]* 0.587   + buffer_in[i+2]*0.114;            // Y =  R*0.299000 + G*0.587000 + B*0.114000
-            buffer_out[i+1]   = -buffer_in[i]*0.1687  - buffer_in[i+1]* 0.3313  + buffer_in[i+2]*0.5  + 128;        // U = -R*0.168736 - G*0.331264 + B*0.500000 + 128
-            buffer_out[i+2] =  buffer_in[i]*0.5     - buffer_in[i+1]* 0.4187  - buffer_in[i]+2*0.813 + 128;       // V =  R*0.500000 - G*0.418688 - B*0.081312 + 128
-             
 
-            /* buffer_out[i]               = (( buffer_in[i+2]*66  + buffer_in[i+1]* 129 + buffer_in[i]*25   + 128) >> 8) + 16;            // Y =  R*0.299000 + G*0.587000 + B*0.114000
-            buffer_out[i+(n_bytes/3)]   = ((-buffer_in[i+2]*38  - buffer_in[i+1]* 74  + buffer_in[i]*112  + 128) >> 8) + 128;           // U = -R*0.168736 - G*0.331264 + B*0.500000 + 128
-            buffer_out[i+(2*n_bytes/3)] = (( buffer_in[i+2]*112 - buffer_in[i+1]* 94  - buffer_in[i]*18   + 128) >> 8) + 128;           // V =  R*0.500000 - G*0.418688 - B*0.081312 + 128*/
+          uint32x4_t twoahead =  vaddq_u32(i,2);
+          uint32x4_t oneahead =  vaddq_u32(i,1);
+          int64x2_t sixtysixTimes_2 = vmull_s32 (buffer_in[twoahead], 66);
+          int64x2_t onetwonineTimes_1 = vmull_s32(buffer_in[oneahead], 129);
+          int64x2_t twentyfiveTimes = vmull_s32(buffer_in[i],25);
+          uint32x4_t firstinternalSum =  vaddq_u32(vaddq_u32(sixtysixTimes_2  + onetwonineTimes_1) + vaddq_u32(twentyfiveTimes, 128));
+          int32x2_t shiftleft_1 = vshl_n_s32 (internalSum, 8);
+
+          buffer_out[i]   = vaddq_u32(shiftleft_1, 16);                        // Y =  R*0.299000 + G*0.587000 + B*0.114000
+
+
+
+          int64x2_t thirtyeightTimes_2 = vmull_s32 (buffer_in[twoahead], 38);
+          int64x2_t seventyfourTimes_1 = vmull_s32 (buffer_in[oneahead], 74);
+          int64x2_t onetwelveTimes_1 = vmull_s32 (buffer_in[oneahead], 112);
+          int32x2_t negative = vmull_s32(thirtyeightTimes_2,-1);
+          int64x2_t onetwelveTimes = vmull_s32(buffer_in[i],112);
+          uint32x4_t SecondinternalSum =  vaddq_u32( vsubq_s32(negative, seventyfourTimes_1), vaddq_u32(onetwelveTimes, 128));
+          int32x2_t shiftleft_2 = vshl_n_s32 (SecondinternalSum, 8);
+          uint32x2_t index_2 = vadd_u32(i, n_bytes/3);
+
+          buffer_out[index_2] = vaddq_u32(shiftleft_2, 128);             // U = -R*0.168736 - G*0.331264 + B*0.500000 + 128
+
+
+
+          int64x2_t onetwelveTimes_2 = vmull_s32 (buffer_in[twoahead], 112);
+          int64x2_t ninetyfourTimes_1 = vmull_s32(buffer_in[oneahead], 94);
+          int64x2_t eighteenTimes = vmull_s32(buffer_in[i],18);
+          uint32x4_t ThirdinternalSum =  vsubq_s32( vsubq_s32(onetwelveTimes_2, ninetyfourTimes_1), vaddq_u32(eighteenTimes, 128));
+          int32x2_t shiftleft_3 = vshl_n_s32 (ThirdinternalSum, 8);
+          int64x2_t subIndex = vmull_s32(2,n_bytes/3);
+          uint32x2_t index_3 = vadd_u32(i, subIndex);
+
+
+          buffer_out[index_3] = vaddq_u32(shiftleft_3, 128);           // V =  R*0.500000 - G*0.418688 - B*0.081312 + 128
+
+
+
+          //buffer_out[i]   = (( buffer_in[i+2]*66  + buffer_in[i+1]* 129 + buffer_in[i]*25  + 128) >> 8) + 16;                        // Y =  R*0.299000 + G*0.587000 + B*0.114000
+          //buffer_out[i+(n_bytes/3)] = ((-buffer_in[i+2]*38  - buffer_in[i+1]* 74 + buffer_in[i]*112  + 128) >> 8) + 128;             // U = -R*0.168736 - G*0.331264 + B*0.500000 + 128
+          //buffer_out[i+(2*n_bytes/3)] = (( buffer_in[i+2]*112 - buffer_in[i+1]* 94 - buffer_in[i]*18   + 128) >> 8) + 128;           // V =  R*0.500000 - G*0.418688 - B*0.081312 + 128
         }
          
     }
