@@ -6,7 +6,7 @@
 LICENSE = "CLOSED"
 
 # List of source files to build the package
-SRC_URI += "file://rgb2yuv_c_doc-1.0/rgb2yuv_c.pdf \
+SRC_URI += "file://rgb2yuv_c_doc-1.0/c_results.pdf \
             file://rgb2yuv_c_doc-1.0/image.bgr \
             file://rgb2yuv_c_doc-1.0/output.yuv "
 
@@ -16,7 +16,7 @@ S = "${WORKDIR}/rgb2yuv_c_doc-1.0"
 # Install the documentation
 do_install () {
     install -d ${D}/usr/share/rgb2yuv_c
-    install -m 0755 ${S}/rgb2yuv_c.pdf ${D}/usr/share/rgb2yuv_c
+    install -m 0755 ${S}/c_results.pdf ${D}/usr/share/rgb2yuv_c
     install -m 0755 ${S}/image.bgr ${D}/usr/share/rgb2yuv_c
     install -m 0755 ${S}/output.yuv ${D}/usr/share/rgb2yuv_c
 }

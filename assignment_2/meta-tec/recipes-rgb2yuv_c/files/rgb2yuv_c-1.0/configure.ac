@@ -4,7 +4,7 @@
 #AC_PREREQ(2.60)
 AC_INIT(rgb2yuv_c, 0.1, ajlennon@dynamicdevices.co.uk)
 AC_CONFIG_SRCDIR([rgb2yuv_c.c])
-AC_CONFIG_HEADER([config.h])
+#AC_CONFIG_HEADER([config.h])
 AM_INIT_AUTOMAKE(rgb2yuv_c, main)
 
 # Checks for programs.
