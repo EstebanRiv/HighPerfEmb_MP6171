@@ -2,10 +2,10 @@
 # Process this file with autoconf to produce a configure script.
 
 #AC_PREREQ(2.60)
-AC_INIT(rgb2yuv_intrinsics, 0.1, ajlennon@dynamicdevices.co.uk)
-AC_CONFIG_SRCDIR([rgb2yuv_intrinsics.c])
+AC_INIT(rgb2yuv_c, 0.1, ajlennon@dynamicdevices.co.uk)
+AC_CONFIG_SRCDIR([rgb2yuv_c.c])
 AC_CONFIG_HEADER([config.h])
-AM_INIT_AUTOMAKE(rgb2yuv_intrinsics, main)
+AM_INIT_AUTOMAKE(rgb2yuv_c, main)
 
 # Checks for programs.
 AC_PROG_CC
