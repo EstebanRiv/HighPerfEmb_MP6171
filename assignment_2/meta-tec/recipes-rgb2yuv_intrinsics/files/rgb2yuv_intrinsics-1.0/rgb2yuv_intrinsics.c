@@ -96,12 +96,12 @@ void rgb2yuv(char *input_image, char *output_image)
     {
         // Input format: RGB24, low memory-->|B G R|B G R|B G R|....|B G R|B G R|B G R|<--high memory
         // Output format: YUV444 packed, low memory->|Y Y Y Y Y..|U U U U U...|V V V V V|<--high memory
-           
+
         // i=B, i+1=G, i+2=R
         for(uint32_t i = 0; i<n_bytes-3; 3*i++)
         {
 
-          
+
 
           uint32x4_t twoahead =  vaddq_u32(i,2);
           uint32x4_t oneahead =  vaddq_u32(i,1);
@@ -145,7 +145,7 @@ void rgb2yuv(char *input_image, char *output_image)
           //buffer_out[i+(n_bytes/3)] = ((-buffer_in[i+2]*38  - buffer_in[i+1]* 74 + buffer_in[i]*112  + 128) >> 8) + 128;             // U = -R*0.168736 - G*0.331264 + B*0.500000 + 128
           //buffer_out[i+(2*n_bytes/3)] = (( buffer_in[i+2]*112 - buffer_in[i+1]* 94 - buffer_in[i]*18   + 128) >> 8) + 128;           // V =  R*0.500000 - G*0.418688 - B*0.081312 + 128
         }
-         
+
     }
 
     write_ptr = fopen(output_image,"wb");
@@ -154,4 +154,3 @@ void rgb2yuv(char *input_image, char *output_image)
     fclose(ptr);
     fclose(write_ptr);
 }
-
