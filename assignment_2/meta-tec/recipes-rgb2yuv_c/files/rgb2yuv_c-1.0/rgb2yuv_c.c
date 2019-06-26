@@ -6,8 +6,7 @@
 
 // Output formats
 //#define YUV_420
-#define YUV_444_FIXED
-//#define YUV_444
+#define YUV_444
 
 void printHelp (void);
 void printAuthorInfo (void);
@@ -39,7 +38,7 @@ int main (int argc, char **argv)
     gettimeofday(&end, NULL);
     t = (double) ((end.tv_sec * 1000000 + end.tv_usec) - (start.tv_sec * 1000000 + start.tv_usec)) / 1000000.0;
 
-    printf("time: %f\n",t);
+    printf("\n-> Execution time: %f\n\n",t);
 }
 
 /* */
@@ -102,9 +101,8 @@ void rgb2yuv(char *input_image, char *output_image)
 
     int n_bytes = heigth * width * 3;
     int n_pixels = heigth * width;
-    int index = 0;
 
-    #if defined(YUV_444) || defined(YUV_444_FIXED)
+    #ifdef YUV_444
     unsigned char buffer_in[n_bytes];
     signed char buffer_y[n_pixels];
     signed char buffer_u[n_pixels];
@@ -132,12 +130,12 @@ void rgb2yuv(char *input_image, char *output_image)
         
         // get YUV components
         for(int i = 0; i<n_pixels; i++)
-        {   
-            // YUV 4:4:4 Planar
+        {
+            //   YUV 4:4:4 Planar
             #ifdef YUV_444
-            buffer_y[i] =  buffer_in[(i*3)]*0.299  + buffer_in[(i*3)+1]* 0.587   + buffer_in[(i*3)+2]*0.114;                 // Y =  R*0.299000 + G*0.587000 + B*0.114000
-            buffer_u[i] = -buffer_in[(i*3)]*0.147  - buffer_in[(i*3)+1]* 0.289  + buffer_in[(i*3)+2]*0.436;           // U = -R*0.168736 - G*0.331264 + B*0.500000 + 128
-            buffer_v[i] =  buffer_in[(i*3)]*0.615  - buffer_in[(i*3)+1]* 0.515  - buffer_in[(i*3)+2]*0.1;           // V =  R*0.500000 - G*0.418688 - B*0.081312 + 128                             
+            buffer_out[i]            = (( buffer_in[(i*3)]*66  + buffer_in[(i*3)+1]* 129 + buffer_in[(i*3)+2]*25   + 128) >> 8) + 16;      
+            buffer_out[n_pixels+i]   = ((-buffer_in[(i*3)]*38  - buffer_in[(i*3)+1]* 74  + buffer_in[(i*3)+2]*112  + 128) >> 8) + 128;     
+            buffer_out[2*n_pixels+i] = (( buffer_in[(i*3)]*112 - buffer_in[(i*3)+1]* 94  - buffer_in[(i*3)+2]*18   + 128) >> 8) + 128;     
             #endif  
 
             //   YUV 4:2:0
@@ -151,24 +149,7 @@ void rgb2yuv(char *input_image, char *output_image)
 
             buffer_out[i] = buffer_y[i];           
             #endif
-
-            //   YUV 4:4:4 Planar  (fixed)
-            #ifdef YUV_444_FIXED
-            buffer_y[i] = (( buffer_in[(i*3)]*66  + buffer_in[(i*3)+1]* 129 + buffer_in[(i*3)+2]*25   + 128) >> 8) + 16;      
-            buffer_u[i] = ((-buffer_in[(i*3)]*38  - buffer_in[(i*3)+1]* 74  + buffer_in[(i*3)+2]*112  + 128) >> 8) + 128;     
-            buffer_v[i] = (( buffer_in[(i*3)]*112 - buffer_in[(i*3)+1]* 94  - buffer_in[(i*3)+2]*18   + 128) >> 8) + 128;     
-            #endif
         }
-
-        #if defined(YUV_444) || defined(YUV_444_FIXED)
-        // wrtie yuv file
-        for(int i = 0; i<(n_pixels); i++)
-        {         
-            buffer_out[i] = buffer_y[i];
-            buffer_out[n_pixels+i] = buffer_u[i];
-            buffer_out[2*n_pixels+i] = buffer_v[i];
-        }
-        #endif
 
         #ifdef YUV_420
         // wrtie yuv file
