@@ -126,8 +126,8 @@ void rgb2yuv(char *input_image, char *output_image)
 
     if (ptr != NULL)
     {
-        // Input format: RGB24, low memory-->|R G B|R G B|R G B|....|R G B|R G B|R G B|<--high memory
-        // Output format: YUV444 plannar, low memory->|Y Y Y Y..|U U U U..|V V V V..|<--high memory
+        // Input format: RGB24, low memory-->|B G R|B G R|B G R|....|B G R|B G R|B G R|<--high memory
+        // Output format: YUV444 packed, low memory->|Y U V |Y U V|....||Y U V..|Y U V..|<--high memory
         
         // get YUV components
         for(int i = 0; i<n_pixels/16; i++)
@@ -143,12 +143,12 @@ void rgb2yuv(char *input_image, char *output_image)
             rgb_x3x16_tmp = vld3q_u8(rgb_ptr+i*16*3);
 
             // get RGB high and low vector sectors in 16bit uints (needed to handle multiplications)
-            uint8x8_t high_r = vget_high_u8(rgb_x3x16_tmp.val[0]);
-            uint8x8_t low_r = vget_low_u8(rgb_x3x16_tmp.val[0]);
+            uint8x8_t high_r = vget_high_u8(rgb_x3x16_tmp.val[2]);
+            uint8x8_t low_r = vget_low_u8(rgb_x3x16_tmp.val[2]);
             uint8x8_t high_g = vget_high_u8(rgb_x3x16_tmp.val[1]);
             uint8x8_t low_g = vget_low_u8(rgb_x3x16_tmp.val[1]);
-            uint8x8_t high_b = vget_high_u8(rgb_x3x16_tmp.val[2]);
-            uint8x8_t low_b = vget_low_u8(rgb_x3x16_tmp.val[2]);
+            uint8x8_t high_b = vget_high_u8(rgb_x3x16_tmp.val[0]);
+            uint8x8_t low_b = vget_low_u8(rgb_x3x16_tmp.val[0]);
 
             int16x8_t signed_high_r = vreinterpretq_s16_u16(vaddl_u8(high_r, vdup_n_u8(0)));
             int16x8_t signed_low_r = vreinterpretq_s16_u16(vaddl_u8(low_r, vdup_n_u8(0)));
