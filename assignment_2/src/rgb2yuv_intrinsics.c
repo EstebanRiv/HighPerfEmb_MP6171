@@ -179,7 +179,7 @@ void rgb2yuv(char *input_image, char *output_image)
             // coeficients for U
             int16x8_t scoef1 = vdupq_n_s16(-38);
             int16x8_t scoef2 = vdupq_n_s16(-74);
-            int16x8_t scoef3 = vdupq_n_s16(-112);
+            int16x8_t scoef3 = vdupq_n_s16(112);
 
             // compute U
             int16x8_t high_u = vmulq_s16(signed_high_r, scoef1);

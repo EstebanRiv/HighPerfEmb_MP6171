@@ -104,9 +104,6 @@ void rgb2yuv(char *input_image, char *output_image)
 
     #ifdef YUV_444
     unsigned char buffer_in[n_bytes];
-    signed char buffer_y[n_pixels];
-    signed char buffer_u[n_pixels];
-    signed char buffer_v[n_pixels];
     signed char buffer_out[n_bytes];
     #endif
 
