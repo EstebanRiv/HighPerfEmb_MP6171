@@ -4,8 +4,8 @@
 #include <unistd.h>
 #include <sys/time.h>
 
+// Output formats
 //#define YUV_420
-#define YUV_444_FIXED
 //#define YUV_444
 
 void printHelp (void);
@@ -103,21 +103,11 @@ void rgb2yuv(char *input_image, char *output_image)
     int n_pixels = heigth * width;
     int index = 0;
 
-    #if defined(YUV_444) || defined(YUV_444_FIXED)
     unsigned char buffer_in[n_bytes];
-    unsigned char buffer_y[n_pixels];
-    unsigned char buffer_u[n_pixels];
-    unsigned char buffer_v[n_pixels];
-    unsigned char buffer_out[n_bytes];
-    #endif
-
-    #ifdef YUV_420
-    unsigned char buffer_in[n_bytes];
-    unsigned char buffer_y[n_pixels];
-    unsigned char buffer_u[n_pixels/4];
-    unsigned char buffer_v[n_pixels/4];
-    unsigned char buffer_out[n_pixels+(n_pixels/2)];
-    #endif
+    signed char buffer_y[n_pixels];
+    signed char buffer_u[n_pixels];
+    signed char buffer_v[n_pixels];
+    signed char buffer_out[n_bytes];
 
     // read input RGB file
     ptr = fopen(input_image,"rb");
@@ -125,62 +115,19 @@ void rgb2yuv(char *input_image, char *output_image)
 
     if (ptr != NULL)
     {
-        // Input format: RGB24, low memory-->|B G R|B G R|B G R|....|B G R|B G R|B G R|<--high memory
-        // Output format: YUV444 plannar, low memory->|Y Y Y Y Y..|U U U U U..|V V V V V..|<--high memory
-        // Output format: YUV444 plannar, low memory->|Y Y Y Y ..|U..|V..|<--high memory
-           
-        printf("r: %i, g: %i, b: %i\n", buffer_in[5],buffer_in[4],buffer_in[3]) ;  
-
+        // Input format: RGB24, low memory-->|R G B|R G B|R G B|....|R G B|R G B|R G B|<--high memory
+        // Output format: YUV444 plannar, low memory->|Y Y Y Y..|U U U U..|V V V V..|<--high memory
         
         // get YUV components
         for(int i = 0; i<n_pixels; i++)
-        {   
-            // YUV 4:4:4 Planar
-            #ifdef YUV_444
-            buffer_y[i] =  buffer_in[(i*3)+2]*0.299   + buffer_in[(i*3)+1]* 0.587   + buffer_in[(i*3)]*0.114;                 // Y =  R*0.299000 + G*0.587000 + B*0.114000
-            buffer_u[i] = -buffer_in[(i*3)+2]*0.1687  - buffer_in[(i*3)+1]* 0.3313  + buffer_in[(i*3)]*0.5   + 128;           // U = -R*0.168736 - G*0.331264 + B*0.500000 + 128
-            buffer_v[i] =  buffer_in[(i*3)+2]*0.5     - buffer_in[(i*3)+1]* 0.4187  - buffer_in[(i*3)]*0.813 + 128;           // V =  R*0.500000 - G*0.418688 - B*0.081312 + 128                             
-            #endif  
-
-            //   YUV 4:2:0
-            #ifdef YUV_420
-            buffer_y[i] =  buffer_in[(i*3)+2]*0.299   + buffer_in[(i*3)+1]* 0.587   + buffer_in[(i*3)]*0.114;                 // Y =  R*0.299000 + G*0.587000 + B*0.114000
-            if ((i % 2 == 0) && ((i/640) % 2 == 0))  
-            {
-                buffer_u[i] = -buffer_in[(i*3)+2]*0.1687  - buffer_in[(i*3)+1]* 0.3313  + buffer_in[(i*3)]*0.5   + 128;       // U = -R*0.168736 - G*0.331264 + B*0.500000 + 128
-                buffer_v[i] =  buffer_in[(i*3)+2]*0.5     - buffer_in[(i*3)+1]* 0.4187  - buffer_in[(i*3)]*0.813 + 128;       // V =  R*0.500000 - G*0.418688 - B*0.081312 + 128                 
-            }
-
-            buffer_out[i] = buffer_y[i];           
-            #endif
-
-            //   YUV 4:4:4 Planar  (fixed)
-            #ifdef YUV_444_FIXED
-            buffer_y[i] = (( buffer_in[(i*3)+2]*66  + buffer_in[(i*3)+1]* 129 + buffer_in[(i*3)]*25   + 128) >> 8) + 16;      
-            buffer_u[i] = ((-buffer_in[(i*3)+2]*38  - buffer_in[(i*3)+1]* 74  + buffer_in[(i*3)]*112  + 128) >> 8) + 128;     
-            buffer_v[i] = (( buffer_in[(i*3)+2]*112 - buffer_in[(i*3)+1]* 94  - buffer_in[(i*3)]*18   + 128) >> 8) + 128;     
-            #endif
-        }
-
-        #if defined(YUV_444) || defined(YUV_444_FIXED)
-        // wrtie yuv file
-        for(int i = 0; i<(n_pixels); i++)
-        {         
-            buffer_out[i] = buffer_y[i];
-            buffer_out[n_pixels+i] = buffer_u[i];
-            buffer_out[2*n_pixels+i] = buffer_v[i];
-        }
-        #endif
-
-        #ifdef YUV_420
-        // wrtie yuv file
-        for(int i = 0; i<(n_pixels/4); i++)
         {
-            buffer_out[n_pixels+i] = buffer_u[i];
-            buffer_out[n_pixels+n_pixels/4+i] = buffer_v[i];
+            //   YUV 4:4:4 Planar
+            /*
+            buffer_out[i] = (( buffer_in[(i*3)]*66  + buffer_in[(i*3)+1]* 129 + buffer_in[(i*3)+2]*25   + 128) >> 8) + 16;      
+            buffer_out[n_pixels+i] = ((-buffer_in[(i*3)]*38  - buffer_in[(i*3)+1]* 74  + buffer_in[(i*3)+2]*112  + 128) >> 8) + 128;     
+            buffer_out[2*n_pixels+i] = (( buffer_in[(i*3)]*112 - buffer_in[(i*3)+1]* 94  - buffer_in[(i*3)+2]*18   + 128) >> 8) + 128;
+            */     
         }
-        #endif        
-         
     }
 
     write_ptr = fopen(output_image,"wb");
