@@ -1,3 +1,4 @@
+SUMMARY = "Utility to convert .rgb files to .yuv"
 # Disable license checks
 LICENSE = "CLOSED"
 

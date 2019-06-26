@@ -1,3 +1,4 @@
+SUMMARY = "Utility to convert .rgb files to .yuv, optimized with NEON"
 # Disable license checks
 LICENSE = "CLOSED"
 

@@ -2,6 +2,7 @@
 # Autotools understood the command to install the documentation, but for unknown
 # reasons it cannot create folder /usr/share/doc in image rootfs.
 
+SUMMARY = "Recipe to copy the rgb2yuv-c binary documentation to /usr/share folder"
 # Disable license checks
 LICENSE = "CLOSED"
 
