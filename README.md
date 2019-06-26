@@ -16,5 +16,5 @@
 Receta       | Comando           | Descripcion
 -------------|-------------------|--------------
 tec-image.bb | bitbake tec-image | Genera imagen 
-rgb2yuv-c_1.0.bb | bitbake rgb2yuv-c | Crea paquete con binario para convertir imagenes .rgb a .yuv 
-rgb2yuv-intrinsics_1.0.bb | bitbake rgb2yuv-intrinsics | Crea paquete con binario para convertir imagenes .rgb a .yuv, utiliza intrisics NEON para mejorar el desempeño
+rgb2yuv-c_1.0.bb | bitbake rgb2yuv-c | Crea paquete con binario para convertir imagenes .rgb a .yuv e instala documentacion en "/usr/share/rgb2yuv_c"
+rgb2yuv-intrinsics_1.0.bb | bitbake rgb2yuv-intrinsics | Crea paquete con binario para convertir imagenes .rgb a .yuv (utiliza intrisics NEON para mejorar el desempeño) e instala documentacion en "/usr/share/rgb2yuv_intrinsics"
