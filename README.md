@@ -11,7 +11,7 @@
 1. Clonar el repositorio
 `git clone https://github.com/EstebanRiv/g2_hpes_2019.git`
 
-2. Copiar yocto later **meta-tec** en la misma carpeta donde se encuentra **meta-rpi**
+2. Copiar yocto layer **meta-tec** en la misma carpeta donde se encuentra **meta-rpi**
 
 Receta       | Comando           | Descripcion
 -------------|-------------------|--------------
