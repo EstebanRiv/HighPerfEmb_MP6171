@@ -104,9 +104,6 @@ void rgb2yuv(char *input_image, char *output_image)
 
     #ifdef YUV_444
     unsigned char buffer_in[n_bytes];
-    signed char buffer_y[n_pixels];
-    signed char buffer_u[n_pixels];
-    signed char buffer_v[n_pixels];
     signed char buffer_out[n_bytes];
     #endif
 
@@ -124,7 +121,7 @@ void rgb2yuv(char *input_image, char *output_image)
 
     if (ptr != NULL)
     {
-        // Input format: RGB24, low memory-->|R G B|R G B|R G B|....|R G B|R G B|R G B|<--high memory
+        // Input format: RGB24, low memory-->|B G R|B G R|B G R|....|B G R|B G R|B G R|<--high memory
         // Output format: YUV444 plannar, low memory->|Y Y Y Y..|U U U U..|V V V V..|<--high memory
         // Output format: YUV420 plannar, low memory->|Y Y Y Y..|U..|V..|<--high memory
         
@@ -133,9 +130,9 @@ void rgb2yuv(char *input_image, char *output_image)
         {
             //   YUV 4:4:4 Planar
             #ifdef YUV_444
-            buffer_out[i]            = (( buffer_in[(i*3)]*66  + buffer_in[(i*3)+1]* 129 + buffer_in[(i*3)+2]*25   + 128) >> 8) + 16;      
-            buffer_out[n_pixels+i]   = ((-buffer_in[(i*3)]*38  - buffer_in[(i*3)+1]* 74  + buffer_in[(i*3)+2]*112  + 128) >> 8) + 128;     
-            buffer_out[2*n_pixels+i] = (( buffer_in[(i*3)]*112 - buffer_in[(i*3)+1]* 94  - buffer_in[(i*3)+2]*18   + 128) >> 8) + 128;     
+            buffer_out[i]            = (( buffer_in[(i*3)+2]*66  + buffer_in[(i*3)+1]* 129 + buffer_in[(i*3)]*25   + 128) >> 8) + 16;      
+            buffer_out[n_pixels+i]   = ((-buffer_in[(i*3)+2]*38  - buffer_in[(i*3)+1]* 74  + buffer_in[(i*3)]*112  + 128) >> 8) + 128;     
+            buffer_out[2*n_pixels+i] = (( buffer_in[(i*3)+2]*112 - buffer_in[(i*3)+1]* 94  - buffer_in[(i*3)]*18   + 128) >> 8) + 128;     
             #endif  
 
             //   YUV 4:2:0
