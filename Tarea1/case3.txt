@@ -1,0 +1,2 @@
+En este caso el problema es que solo se libera una posicion de memoria. Se necesita liberar la memoria dentro del mismo ciclo o crear un loop por aparte para liberar toda la memoria almacenada en el ciclo for. Esto depende de la implementacion. 
+Valgrind detecta este tipo de errores y brinda un summary donde cuenta la cantidad de mallocs y la cantidad de frees llamados. 

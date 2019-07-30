@@ -1,0 +1,9 @@
+En el primer caso, se crea una variable "a" y se le asigna un espacio en memoria de 10 elementos de tipo entero. 
+
+En C, los indices para recorrer los arreglos van de 0 a L-1, donde L es el largo del arreglo o cantidad de elementos reservados en memoria. 
+
+El ciclo for, se ejecuta mientras el indice "i" sea menor que 11. Esto provoca que i tome el valor de 10 y se accese la posicion 10 del arreglo "a" siendo esta una posicion invalida y provoque un error en la ejecucion.  
+
+
+En este caso valgrind esta detectando que hay un error al acceder a una posicion
+donde hay 0 asignados.
