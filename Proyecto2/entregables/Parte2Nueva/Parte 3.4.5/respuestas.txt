@@ -1,0 +1,11 @@
+Segun el reporte, las tres funciones que mas tiempo consumieron son: 
+
+   Funcion               Tiempo (%)
+cudaMallocPitch          41.83% 
+cudaFree                 34.95% 
+cudaStreamSynchronize    17.23%
+
+
+41.83%  23.3283s     11193  2.0842ms  17.239us  12.3457s  cudaMallocPitch
+34.95%  19.4934s     11193  1.7416ms  13.437us  86.503ms  cudaFree
+17.23%  9.60743s     16359  587.29us  3.4900us  87.465ms  cudaStreamSynchronize

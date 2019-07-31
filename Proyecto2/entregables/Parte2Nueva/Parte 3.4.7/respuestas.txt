@@ -1,0 +1,3 @@
+En este caso no es posible obtener resultados por que 
+no se esta ejecuntando ningun cuda. En este caso solamente se 
+esta utilizando el cpu para ejecutar el programa. 

@@ -1,0 +1,9 @@
+Por alguna razon no se pudo ejecutar en nvprof con modo sudo. 
+Para solucionar esto  se implemento un script "envMount.sh"
+para montar el ambiente virtual, y se ejecuta el profiler. 
+
+El comando utilizado es el siguiente: 
+
+sudo /usr/local/cuda/bin/nvprof --log-file profoutput%p.log --profile-child-processes ./envMount.sh
+
+Ver la imagen adjunta. 
